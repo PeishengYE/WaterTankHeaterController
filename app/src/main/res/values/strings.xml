@@ -1,3 +1,27 @@
 <resources>
-    <string name="app_name">WaterTankHeater</string>
+    <string name="app_name">热水器控制器</string>
+    <string name="sensor_on_water">热水温度</string>
+    <string name="button_power_on">开启热水器</string>
+    <string name="button_power_off">关闭热水器</string>
+    <string name="current_switch_status">当前热水器状态:</string>
+    <string name="power_on">开启</string>
+    <string name="power_off">关闭</string>
+    <string name="updating">检测中</string>
+    <string name="cmd_in_progress">发送命令中</string>
+    <string name="cmd_is_done">命令发送完毕</string>
+    <string name="sensor_on_relay">继电器散热片温度</string>
+    <string name="temp_updating_in_progress">温度更新中</string>
+    <string name="unknow_state">未知状态</string>
+    <string name="disable_button_state">禁用</string>
+    <string name="switch_status_updating_in_progress">热水器状态更新中</string>
+    <string name="sending_on_in_progress">开启命令发送中</string>
+    <string name="sending_off_in_progress">关闭命令发送中</string>
+    <string name="network_error_try_again">网络连接错误，重试中</string>
+    <string name="query_temprature">查询温度时，</string>
+    <string name="query_switch">查询热水器时，</string>
+    <string name="error">严重错误</string>
+    <string name="to_google">发送到谷歌</string>
+    <string name="summary_net_error_on_switch">热水器连接错误次数：</string>
+    <string name="summary_net_error_on_sensor">温度传感器连接错误次数：</string>
+
 </resources>

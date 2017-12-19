@@ -1,12 +1,23 @@
 package com.radioyps.watertankheater;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
+    StateReceiver mStateReceiver;
+    private Intent mServiceIntent ;
+
+    public static final String LOG_TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
           /*
@@ -21,12 +32,17 @@ public class MainActivity extends AppCompatActivity {
         statusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
 
         // Instantiates a new DownloadStateReceiver
-        mDownloadStateReceiver = new DownloadStateReceiver();
+        mStateReceiver = new StateReceiver();
 
         // Registers the DownloadStateReceiver and its intent filters
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                mDownloadStateReceiver,
+                mStateReceiver,
                 statusIntentFilter);
+
+        mServiceIntent =
+                new Intent(this, IntentWorkerService.class);
+        startService(mServiceIntent);
+
         setContentView(R.layout.activity_main);
     }
 
@@ -34,16 +50,12 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
 
         // If the DownloadStateReceiver still exists, unregister it and set it to null
-        if (mDownloadStateReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mDownloadStateReceiver);
-            mDownloadStateReceiver = null;
+        if (mStateReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mStateReceiver);
+            mStateReceiver = null;
         }
 
-        // Unregisters the FragmentDisplayer instance
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(this.mFragmentDisplayer);
 
-        // Sets the main View to null
-        mMainView = null;
 
         // Must always call the super method at the end.
         super.onDestroy();
@@ -54,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
      * This class uses the BroadcastReceiver framework to detect and handle status messages from
      * the service that downloads URLs.
      */
-    private class DownloadStateReceiver extends BroadcastReceiver {
+    private class StateReceiver extends BroadcastReceiver {
 
-        private DownloadStateReceiver() {
+        private StateReceiver() {
 
             // prevents instantiation by other packages.
         }
@@ -81,28 +93,28 @@ public class MainActivity extends AppCompatActivity {
                 case Constants.STATE_ACTION_STARTED:
                     if (Constants.LOGD) {
 
-                        Log.d(CLASS_TAG, "State: STARTED");
+                        Log.d(LOG_TAG, "State: STARTED");
                     }
                     break;
                 // Logs "connecting to network" state
                 case Constants.STATE_ACTION_CONNECTING:
                     if (Constants.LOGD) {
 
-                        Log.d(CLASS_TAG, "State: CONNECTING");
+                        Log.d(LOG_TAG, "State: CONNECTING");
                     }
                     break;
                 // Logs "parsing the RSS feed" state
                 case Constants.STATE_ACTION_PARSING:
                     if (Constants.LOGD) {
 
-                        Log.d(CLASS_TAG, "State: PARSING");
+                        Log.d(LOG_TAG, "State: PARSING");
                     }
                     break;
                 // Logs "Writing the parsed data to the content provider" state
                 case Constants.STATE_ACTION_WRITING:
                     if (Constants.LOGD) {
 
-                        Log.d(CLASS_TAG, "State: WRITING");
+                        Log.d(LOG_TAG, "State: WRITING");
                     }
                     break;
                 // Starts displaying data when the RSS download is complete
@@ -110,21 +122,10 @@ public class MainActivity extends AppCompatActivity {
                     // Logs the status
                     if (Constants.LOGD) {
 
-                        Log.d(CLASS_TAG, "State: COMPLETE");
+                        Log.d(LOG_TAG, "State: COMPLETE");
                     }
 
-                    // Finds the fragment that displays thumbnails
-                    PhotoThumbnailFragment localThumbnailFragment =
-                            (PhotoThumbnailFragment) getSupportFragmentManager().findFragmentByTag(
-                                    Constants.THUMBNAIL_FRAGMENT_TAG);
 
-                    // If the thumbnail Fragment is hidden, don't change its display status
-                    if ((localThumbnailFragment == null)
-                            || (!localThumbnailFragment.isVisible()))
-                        return;
-
-                    // Indicates that the thumbnail Fragment is visible
-                    localThumbnailFragment.setLoaded(true);
                     break;
                 default:
                     break;
