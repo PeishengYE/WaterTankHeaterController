@@ -47,6 +47,20 @@ public final class Constants {
     public static final String EXTENDED_FULLSCREEN =
             "com.radioyps.watertankheater.EXTENDED_FULLSCREEN";
 
+    // Defines the key for storing fullscreen state
+    public static final String Heater_IP_ADDRESS =
+            "192.168.12.202";
+
+    public static final int Heater_IP_PORT =
+            5018;
+
+
+    public static String CmdGetTemperature = "get_temp";
+    public static String CmdGetSwtichStatus =        "get_switch";
+    public static String CmdSetSwitchON  =      "switch_on";
+    public static String CmdSetSwitchOFF =        "switch_off";
+
+    public static String NETWORK_ERROR =        "Network Timeout";
     /*
      * A user-agent string that's sent to the HTTP site. It includes information about the device
      * and the build that the device is running.
