@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent mServiceIntent ;
 
     public static final String LOG_TAG = "MainActivity";
+    public static final String TEST = "MainActivity_test";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
                 statusIntentFilter);
 
         mServiceIntent =
-                new Intent(this, IntentWorkerService.class);
+                new Intent(this, IntentWorkerService.class)
+                           .setData(Uri.parse(TEST));
         startService(mServiceIntent);
 
         setContentView(R.layout.activity_main);
