@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         startService(mServiceIntent);
 
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this, UsbDebuggingMonitorService.class));
     }
 
 

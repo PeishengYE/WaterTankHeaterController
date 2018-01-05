@@ -15,7 +15,7 @@ public class IntentWorkerService extends IntentService {
     public static final String LOG_TAG = "IntentWorkerService";
 
     // Defines and instantiates an object for handling status updates.
-    private BroadcastNotifier mBroadcaster = new BroadcastNotifier(this);
+    //private BroadcastNotifier mBroadcaster = new BroadcastNotifier(getApplicationContext());
 
     /**
      * An IntentService must always have a constructor that calls the super constructor. The

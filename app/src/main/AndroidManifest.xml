@@ -25,6 +25,9 @@
         <service
             android:name=".IntentWorkerService"
             android:exported="false"/>
+        <service
+            android:name=".UsbDebuggingMonitorService"
+            android:exported="false"/>
     </application>
 
 
