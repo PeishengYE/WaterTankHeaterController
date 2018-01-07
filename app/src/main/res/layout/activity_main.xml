@@ -51,6 +51,7 @@
         android:layout_width="248dp"
         android:layout_height="232dp"
         android:text="32"
+        android:id="@+id/water_temperature_big"
         android:textSize="130sp"
         android:fontFamily="sans-serif-light"
         android:gravity="center"

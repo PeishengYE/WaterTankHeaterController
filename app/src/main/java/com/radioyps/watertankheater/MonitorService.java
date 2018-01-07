@@ -53,22 +53,25 @@ public abstract class MonitorService
                 if (MonitorService.this.mHandler == null) {
                     return;
                 }
-                if (MonitorService.this.canContinue())
-                {
-
-                    Log.i(LOG_TAG, "runnable()>> run the task: ");
-                    querySwitchStatus();
-                    queryTemperature();
-//                    Intent localIntent = new Intent(MonitorService.this.getBaseContext(), MainActivity.class);
-//                    localIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-//                    localIntent.putExtra("goto", true);
-//                    MonitorService.this.startActivity(localIntent);
-//                    MonitorService.this.cleanupAndShutdown();
-                    return;
-                }
-                MonitorService.this.mHandler.postDelayed(this, 1000L);
+//                if (MonitorService.this.canContinue())
+//                {
+//
+//                    Log.i(LOG_TAG, "runnable()>> run the task: ");
+//                    querySwitchStatus();
+//                    queryTemperature();
+////                    Intent localIntent = new Intent(MonitorService.this.getBaseContext(), MainActivity.class);
+////                    localIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+////                    localIntent.putExtra("goto", true);
+////                    MonitorService.this.startActivity(localIntent);
+////                    MonitorService.this.cleanupAndShutdown();
+//                    return;
+//                }
+                querySwitchStatus();
+                queryTemperature();
+                MonitorService.this.mHandler.postDelayed(this, 10*1000L);
             }
         }.run();
+        /*
         localHandler.postDelayed(new Runnable()
         {
             public void run()
@@ -76,6 +79,7 @@ public abstract class MonitorService
                 MonitorService.this.cleanupAndShutdown();
             }
         }, 60000L);
+        */
     }
 
     public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2)

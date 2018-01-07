@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">热水器控制器</string>
-    <string name="sensor_on_water">热水温度</string>
-    <string name="button_power_on">开启热水器</string>
-    <string name="button_power_off">关闭热水器</string>
+    <string name="sensor_on_water">热水温度: </string>
+    <string name="button_power_available_on">开启热水器</string>
+    <string name="button_power_available_off">关闭热水器</string>
     <string name="current_switch_status">当前热水器状态:</string>
     <string name="power_on">开启</string>
     <string name="power_off">关闭</string>

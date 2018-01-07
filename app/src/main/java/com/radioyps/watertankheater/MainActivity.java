@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mPowerButton;
     private TextView mRelayTemperatureView;
-    private TextView mWaterTemperatureView;
+    private TextView mWaterTemperatureViewBig;
+    private TextView mWaterTemperatureViewSmall;
     private TextView mSwitchStatus;
     private ProgressBar mProgressBar;
 
@@ -46,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+
         mPowerButton = (Button) findViewById(R.id.power_button);
         mRelayTemperatureView = (TextView)findViewById(R.id.relay_temperature);
-        mWaterTemperatureView = (TextView)findViewById(R.id.water_temperature);
+        mWaterTemperatureViewSmall = (TextView)findViewById(R.id.water_temperature);
+        mWaterTemperatureViewBig = (TextView)findViewById(R.id.water_temperature_big);
         mSwitchStatus = (TextView)findViewById(R.id.switch_state);
         mPowerButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View view){
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 statusIntentFilter);
 
 
-        setContentView(R.layout.activity_main);
+
 
         startService(new Intent(this, UsbDebuggingMonitorService.class));
 //        querySwitchStatus();
@@ -150,19 +153,9 @@ public class MainActivity extends AppCompatActivity {
         startService(intentCmd);
     }
 
-    public void querySwitchStatus(){
-        Intent intentCmd =
-                new Intent(this, IntentWorkerService.class)
-                        .setData(Uri.parse(CmdGetSwtichStatus));
-        startService(intentCmd);
-    }
 
-    public void queryTemperature(){
-        Intent intentCmd =
-                new Intent(this, IntentWorkerService.class)
-                        .setData(Uri.parse(CmdGetTemperature));
-        startService(intentCmd);
-    }
+
+
 
     /**
      * This class uses the BroadcastReceiver framework to detect and handle status messages from
@@ -189,18 +182,13 @@ public class MainActivity extends AppCompatActivity {
              * Gets the status from the Intent's extended data, and chooses the appropriate action
              */
             int value;
-            /* NETWORK_ERROR */
-            value =  intent.getIntExtra(Constants.EXTENDED_NETWORK_ERROR, HAVE_NETWORK_ERROR);
-            if(value == HAVE_NETWORK_ERROR){
-                 mPowerButtonStatus = POWER_BUTTON_STATUS_UNKNOWN;
-            }else{
-
-            }
 
             /* WATER_TEMPERATURE */
             value =  intent.getIntExtra(Constants.EXTENDED_WATER_TEMPERATURE, HAVE_NETWORK_ERROR);
             if(value != HAVE_NETWORK_ERROR){
                 Log.i(LOG_TAG, "onReceive()>> temperatur is " + value);
+                mWaterTemperatureViewBig.setText(String.valueOf(value/1000));
+                mWaterTemperatureViewSmall.setText(getString(R.string.sensor_on_water)+String.valueOf(value/1000.0));
             }
 
 
@@ -209,10 +197,17 @@ public class MainActivity extends AppCompatActivity {
             if(value != HAVE_NETWORK_ERROR){
              if(value == STATE_SWITCH_ON){
                  Log.i(LOG_TAG, "onReceive()>> Switch is on " );
-                 mSwitchStatus.setText(getString(R.string.power_on));
+                 mSwitchStatus.setText(getString(R.string.current_switch_status) + getString(R.string.power_on));
+                 mPowerButtonStatus = POWER_BUTTON_STATUS_ON;
+                 mPowerButton.setText(getString(R.string.button_power_available_off));
+
+
              }else if(value == STATE_SWITCH_OFF){
                  Log.i(LOG_TAG, "onReceive()>> Switch is OFF " );
-                 mSwitchStatus.setText(getString(R.string.power_off));
+                 mSwitchStatus.setText(getString(R.string.current_switch_status) +getString(R.string.power_off));
+                 mPowerButtonStatus = POWER_BUTTON_STATUS_OFF;
+                 mPowerButton.setText(getString(R.string.button_power_available_on));
+
              }
             }
 
