@@ -10,6 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import static com.radioyps.watertankheater.Constants.CmdGetSwtichStatus;
+import static com.radioyps.watertankheater.Constants.CmdGetTemperature;
+import static com.radioyps.watertankheater.Constants.CmdSetSwitchOFF;
+import static com.radioyps.watertankheater.Constants.CmdSetSwitchON;
+
 public class MainActivity extends AppCompatActivity {
 
     StateReceiver mStateReceiver;
@@ -21,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
 
           /*
          * Creates an intent filter for DownloadStateReceiver that intercepts broadcast Intents
@@ -49,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         startService(new Intent(this, UsbDebuggingMonitorService.class));
+        querySwitchStatus();
+        queryTemperature();
     }
 
 
@@ -66,6 +75,35 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+
+
+    private void setSwitchOff(){
+        Intent intentCmd =
+                new Intent(this, IntentWorkerService.class)
+                        .setData(Uri.parse(CmdSetSwitchOFF));
+        startService(intentCmd);
+    }
+
+    private void setSwitchOn(){
+        Intent intentCmd =
+                new Intent(this, IntentWorkerService.class)
+                        .setData(Uri.parse(CmdSetSwitchON));
+        startService(intentCmd);
+    }
+
+    private void querySwitchStatus(){
+        Intent intentCmd =
+                new Intent(this, IntentWorkerService.class)
+                        .setData(Uri.parse(CmdGetSwtichStatus));
+        startService(intentCmd);
+    }
+
+    private void queryTemperature(){
+        Intent intentCmd =
+                new Intent(this, IntentWorkerService.class)
+                        .setData(Uri.parse(CmdGetTemperature));
+        startService(intentCmd);
+    }
 
     /**
      * This class uses the BroadcastReceiver framework to detect and handle status messages from
