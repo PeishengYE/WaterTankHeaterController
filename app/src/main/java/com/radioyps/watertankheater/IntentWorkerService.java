@@ -41,6 +41,7 @@ public class IntentWorkerService extends IntentService {
     public IntentWorkerService() {
 
         super("IntentWorkerService");
+        Log.i(LOG_TAG, "IntentWorkerService()>> ");
     }
 
     /**
@@ -51,6 +52,10 @@ public class IntentWorkerService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent workIntent) {
+        // Gets a URL to read from the incoming Intent's "data" value
+        String localUrlString = workIntent.getDataString();
+
+        Log.i(LOG_TAG, "IntentWorkerService()>> getting intent with:  "+ localUrlString);
 
         Socket socket = null;
         String cmdString = workIntent.getDataString();

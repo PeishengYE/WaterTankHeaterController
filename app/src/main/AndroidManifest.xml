@@ -22,10 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".IntentWorkerService"
+            android:exported="false"/>
     </application>
-    -->
-    <service
-        android:name=".IntentWorkerService"
-        android:exported="false"/>
+
+
 
 </manifest>

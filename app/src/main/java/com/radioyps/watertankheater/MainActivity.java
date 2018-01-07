@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent mServiceIntent ;
 
     public static final String LOG_TAG = "MainActivity";
+    public static final String TEST = "MainActivity_test";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -47,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 mStateReceiver,
                 statusIntentFilter);
 
+        mServiceIntent =
+                new Intent(this, IntentWorkerService.class)
+                           .setData(Uri.parse(TEST));
+        startService(mServiceIntent);
 
         querySwitchStatus();
         queryTemperature();
