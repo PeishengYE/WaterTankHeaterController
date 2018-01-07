@@ -34,7 +34,7 @@ import android.support.v4.content.LocalBroadcastManager;
          *
          * @param status {@link Integer} denoting a work request status
          */
-        public void broadcastIntentWithState(int status) {
+        public void broadcastIntentWithSwitchState(int status) {
 
             Intent localIntent = new Intent();
 
@@ -42,7 +42,7 @@ import android.support.v4.content.LocalBroadcastManager;
             localIntent.setAction(Constants.BROADCAST_ACTION);
 
             // Puts the status into the Intent
-            localIntent.putExtra(Constants.EXTENDED_DATA_STATUS, status);
+            localIntent.putExtra(Constants.EXTENDED_SWITCH_STATUS, status);
             localIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
             // Broadcasts the Intent
@@ -50,28 +50,53 @@ import android.support.v4.content.LocalBroadcastManager;
 
         }
 
-        /**
-         * Uses LocalBroadcastManager to send an {@link String} containing a logcat message.
-         * {@link Intent} has the action {@code BROADCAST_ACTION} and the category {@code DEFAULT}.
-         *
-         * @param logData a {@link String} to insert into the log.
-         */
-        public void notifyProgress(String logData) {
 
-            Intent localIntent = new Intent();
+    public void broadcastIntentWithRelayTemperature(int status) {
 
-            // The Intent contains the custom broadcast action for this app
-            localIntent.setAction(Constants.BROADCAST_ACTION);
+        Intent localIntent = new Intent();
 
-            localIntent.putExtra(Constants.EXTENDED_DATA_STATUS, -1);
+        // The Intent contains the custom broadcast action for this app
+        localIntent.setAction(Constants.BROADCAST_ACTION);
 
-            // Puts log data into the Intent
-            localIntent.putExtra(Constants.EXTENDED_STATUS_LOG, logData);
-            localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        // Puts the status into the Intent
+        localIntent.putExtra(Constants.EXTENDED_RELAY_TEMPERATURE, status);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
-            // Broadcasts the Intent
-            mBroadcaster.sendBroadcast(localIntent);
+        // Broadcasts the Intent
+        mBroadcaster.sendBroadcast(localIntent);
 
-        }
+    }
 
+    public void broadcastIntentWithWaterTemperature(int status) {
+
+        Intent localIntent = new Intent();
+
+        // The Intent contains the custom broadcast action for this app
+        localIntent.setAction(Constants.BROADCAST_ACTION);
+
+        // Puts the status into the Intent
+        localIntent.putExtra(Constants.EXTENDED_WATER_TEMPERATURE, status);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        // Broadcasts the Intent
+        mBroadcaster.sendBroadcast(localIntent);
+
+    }
+
+
+    public void broadcastIntentWithError( int state) {
+
+        Intent localIntent = new Intent();
+
+        // The Intent contains the custom broadcast action for this app
+        localIntent.setAction(Constants.BROADCAST_ACTION);
+
+        // Puts the status into the Intent
+        localIntent.putExtra(Constants.EXTENDED_NETWORK_ERROR, state);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        // Broadcasts the Intent
+        mBroadcaster.sendBroadcast(localIntent);
+
+    }
     }

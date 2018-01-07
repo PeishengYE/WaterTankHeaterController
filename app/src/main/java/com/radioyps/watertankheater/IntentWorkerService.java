@@ -14,9 +14,11 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+import static com.radioyps.watertankheater.Constants.HAVE_NETWORK_ERROR;
 import static com.radioyps.watertankheater.Constants.Heater_IP_ADDRESS;
 import static com.radioyps.watertankheater.Constants.Heater_IP_PORT;
 import static com.radioyps.watertankheater.Constants.NETWORK_ERROR;
+import static com.radioyps.watertankheater.Constants.NO_NETWORK_ERROR;
 
 /**
  * Created by yep on 18/12/17.
@@ -103,20 +105,19 @@ public class IntentWorkerService extends IntentService {
             inputStream.close();
 
         } catch (UnknownHostException e) {
-
+            Log.i(LOG_TAG, "onHandleIntent()>> exception on UnknownHostException " );
             e.printStackTrace();
-            response = "UnknownHostException: " + e.toString();
+            response = NETWORK_ERROR;
         } catch (SocketTimeoutException e) {
 
-            Log.i(LOG_TAG, "onHandleIntent()>> exception on TIMEOUT error " );
+            Log.i(LOG_TAG, "onHandleIntent()>> exception on SocketTimeoutException  " );
             e.printStackTrace();
             response = NETWORK_ERROR;
         } catch (IOException e) {
-
+            Log.i(LOG_TAG, "onHandleIntent()>> exception on UnKnown issue  " );
             e.printStackTrace();
-            //response = "IOException: " + e.toString();
-            if(!isReceivedSth )
-                response = NETWORK_ERROR;
+
+            response = NETWORK_ERROR;
         } finally {
             Log.i(LOG_TAG, "onHandleIntent ()>> trying closing socket");
             if (socket != null) {
@@ -128,6 +129,15 @@ public class IntentWorkerService extends IntentService {
                     e.printStackTrace();
                 }
             }
+        }
+
+        if(!response.startsWith(NETWORK_ERROR)){
+            mBroadcaster.broadcastIntentWithError(NO_NETWORK_ERROR);
+            mBroadcaster.broadcastIntentWithWaterTemperature(30);
+            mBroadcaster.broadcastIntentWithSwitchState(1);
+            mBroadcaster.broadcastIntentWithRelayTemperature(20);
+        }else{
+            mBroadcaster.broadcastIntentWithError(HAVE_NETWORK_ERROR);
         }
 
     }
