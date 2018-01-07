@@ -15,12 +15,16 @@ package com.radioyps.watertankheater;
         import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
         import static com.radioyps.watertankheater.Constants.CmdGetSwtichStatus;
         import static com.radioyps.watertankheater.Constants.CmdGetTemperature;
+        import static com.radioyps.watertankheater.Constants.PROGRESS_BAR_OFF;
+        import static com.radioyps.watertankheater.Constants.PROGRESS_BAR_ON;
 
 public abstract class MonitorService
         extends Service
 {
     private Handler mHandler;
     private static final String LOG_TAG = "MonitorService";
+    private BroadcastNotifier mBroadcaster = new BroadcastNotifier(this);
+    private static boolean isProgressBarEnabled = false;
     private void cleanupAndShutdown()
     {
         Handler localHandler = this.mHandler;
@@ -66,9 +70,18 @@ public abstract class MonitorService
 ////                    MonitorService.this.cleanupAndShutdown();
 //                    return;
 //                }
+                if(isProgressBarEnabled){
+                    mBroadcaster.broadcastIntentWithProgressBarStatus(PROGRESS_BAR_OFF);
+                    isProgressBarEnabled = false;
+                }else {
+                    mBroadcaster.broadcastIntentWithProgressBarStatus(PROGRESS_BAR_ON);
+                    isProgressBarEnabled = true;
+                }
+
                 querySwitchStatus();
                 queryTemperature();
                 MonitorService.this.mHandler.postDelayed(this, 10*1000L);
+
             }
         }.run();
         /*

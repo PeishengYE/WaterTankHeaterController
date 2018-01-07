@@ -84,6 +84,22 @@ import android.support.v4.content.LocalBroadcastManager;
     }
 
 
+    public void broadcastIntentWithProgressBarStatus( int state) {
+
+        Intent localIntent = new Intent();
+
+        // The Intent contains the custom broadcast action for this app
+        localIntent.setAction(Constants.BROADCAST_ACTION);
+
+        // Puts the status into the Intent
+        localIntent.putExtra(Constants.EXTENDED_QUERY_PROGRESS_BAR_STATUS, state);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        // Broadcasts the Intent
+        mBroadcaster.sendBroadcast(localIntent);
+
+    }
+
     public void broadcastIntentWithError( int state) {
 
         Intent localIntent = new Intent();

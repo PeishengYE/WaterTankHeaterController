@@ -43,12 +43,25 @@ public final class Constants {
     public static final String EXTENDED_WATER_TEMPERATURE = "com.radioyps.watertankheater.WATER_TEMPERATURE";
     public static final String EXTENDED_NETWORK_ERROR = "com.radioyps.watertankheater.NETWORK_ERROR";
 
+    public static final String EXTENDED_QUERY_PROGRESS_BAR_STATUS = "com.radioyps.watertankheater.PROGRESS_BAR_STATUS";
+
+
+
+
     public static final int HAVE_NETWORK_ERROR = 0x44;
     public static final int NO_NETWORK_ERROR = 0x88;
 
     public static final int POWER_BUTTON_STATUS_UNKNOWN = 0x14;
     public static final int POWER_BUTTON_STATUS_ON = 0x22;
     public static final int POWER_BUTTON_STATUS_OFF = 0x33;
+
+    public static final int PROGRESS_BAR_ON = 0x133;
+    public static final int PROGRESS_BAR_OFF = 0x144;
+
+    public static final int YEP_UNKNOWN_ERROR = 0x444;
+
+
+
     // Defines the key for the log "extra" in an Intent
     public static final String EXTENDED_STATUS_LOG = "com.radioyps.watertankheater.LOG";
 

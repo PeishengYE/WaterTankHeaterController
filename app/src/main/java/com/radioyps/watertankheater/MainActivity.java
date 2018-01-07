@@ -22,8 +22,11 @@ import static com.radioyps.watertankheater.Constants.HAVE_NETWORK_ERROR;
 import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_OFF;
 import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_ON;
 import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_UNKNOWN;
+import static com.radioyps.watertankheater.Constants.PROGRESS_BAR_OFF;
+import static com.radioyps.watertankheater.Constants.PROGRESS_BAR_ON;
 import static com.radioyps.watertankheater.Constants.STATE_SWITCH_OFF;
 import static com.radioyps.watertankheater.Constants.STATE_SWITCH_ON;
+import static com.radioyps.watertankheater.Constants.YEP_UNKNOWN_ERROR;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         mWaterTemperatureViewSmall = (TextView)findViewById(R.id.water_temperature);
         mWaterTemperatureViewBig = (TextView)findViewById(R.id.water_temperature_big);
         mSwitchStatus = (TextView)findViewById(R.id.switch_state);
+
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
         mPowerButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View view){
 
@@ -183,12 +188,22 @@ public class MainActivity extends AppCompatActivity {
              */
             int value;
 
+            /* PROGRESS BAR */
+            value =  intent.getIntExtra(Constants.EXTENDED_QUERY_PROGRESS_BAR_STATUS, YEP_UNKNOWN_ERROR);
+            if(value == PROGRESS_BAR_OFF){
+                Log.i(LOG_TAG, "onReceive()>> progress bar is off " );
+                mProgressBar.setVisibility(View.GONE);
+            }else if(value == PROGRESS_BAR_ON){
+                Log.i(LOG_TAG, "onReceive()>> progress bar is on " );
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+
             /* WATER_TEMPERATURE */
             value =  intent.getIntExtra(Constants.EXTENDED_WATER_TEMPERATURE, HAVE_NETWORK_ERROR);
             if(value != HAVE_NETWORK_ERROR){
                 Log.i(LOG_TAG, "onReceive()>> temperatur is " + value);
                 mWaterTemperatureViewBig.setText(String.valueOf(value/1000));
-                mWaterTemperatureViewSmall.setText(getString(R.string.sensor_on_water)+String.valueOf(value/1000.0));
+                mWaterTemperatureViewSmall.setText(getString(R.string.sensor_on_water)+" "+String.valueOf(value/1000.0));
             }
 
 
@@ -211,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
              }
             }
 
+
+            /**/
 
 
             /* RELAY_TEMPERATURE */

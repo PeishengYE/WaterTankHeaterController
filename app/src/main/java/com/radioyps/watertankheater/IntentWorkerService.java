@@ -22,6 +22,8 @@ import static com.radioyps.watertankheater.Constants.Heater_IP_ADDRESS;
 import static com.radioyps.watertankheater.Constants.Heater_IP_PORT;
 import static com.radioyps.watertankheater.Constants.NETWORK_ERROR;
 import static com.radioyps.watertankheater.Constants.NO_NETWORK_ERROR;
+import static com.radioyps.watertankheater.Constants.PROGRESS_BAR_OFF;
+import static com.radioyps.watertankheater.Constants.PROGRESS_BAR_ON;
 import static com.radioyps.watertankheater.Constants.STATE_SWITCH_OFF;
 import static com.radioyps.watertankheater.Constants.STATE_SWITCH_ON;
 
@@ -66,7 +68,9 @@ public class IntentWorkerService extends IntentService {
         String cmd = workIntent.getDataString();
 
         Log.i(LOG_TAG, "IntentWorkerService()>> getting intent with:  " + cmd);
+
         sendCmd(cmd);
+//        mBroadcaster.broadcastIntentWithProgressBarStatus(PROGRESS_BAR_OFF);
 
     }
 

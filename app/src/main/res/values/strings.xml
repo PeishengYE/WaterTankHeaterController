@@ -9,7 +9,7 @@
     <string name="updating">检测中</string>
     <string name="cmd_in_progress">发送命令中</string>
     <string name="cmd_is_done">命令发送完毕</string>
-    <string name="sensor_on_relay">继电器散热片温度</string>
+    <string name="sensor_on_relay">散热片温度</string>
     <string name="temp_updating_in_progress">温度更新中</string>
     <string name="unknow_state">未知状态</string>
     <string name="disable_button_state">禁用</string>
