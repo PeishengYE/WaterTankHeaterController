@@ -27,7 +27,7 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:text="@string/disable_button_state"
-        android:id="@+id/button"
+        android:id="@+id/power_button"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         />
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/sensor_on_water"
-        android:id="@+id/water_temperature_tag"
+        android:id="@+id/water_temperature"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
 

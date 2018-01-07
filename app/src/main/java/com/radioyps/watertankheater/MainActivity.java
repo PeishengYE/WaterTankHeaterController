@@ -9,16 +9,30 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import static com.radioyps.watertankheater.Constants.CmdGetSwtichStatus;
 import static com.radioyps.watertankheater.Constants.CmdGetTemperature;
 import static com.radioyps.watertankheater.Constants.CmdSetSwitchOFF;
 import static com.radioyps.watertankheater.Constants.CmdSetSwitchON;
+import static com.radioyps.watertankheater.Constants.HAVE_NETWORK_ERROR;
+import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_OFF;
+import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_ON;
+import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_UNKNOWN;
 
 public class MainActivity extends AppCompatActivity {
 
     StateReceiver mStateReceiver;
-    private Intent mServiceIntent ;
+
+    private Button mPowerButton;
+    private TextView mRelayTemperatureView;
+    private TextView mWaterTemperatureView;
+    private ProgressBar mProgressBar;
+
+    private int mPowerButtonStatus = POWER_BUTTON_STATUS_UNKNOWN;
 
     public static final String LOG_TAG = "MainActivity";
     @Override
@@ -28,6 +42,23 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        mPowerButton = (Button) findViewById(R.id.power_button);
+        mRelayTemperatureView = (TextView)findViewById(R.id.relay_temperature);
+        mWaterTemperatureView = (TextView)findViewById(R.id.water_temperature);
+
+        mPowerButton.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View view){
+
+                if(mPowerButtonStatus == POWER_BUTTON_STATUS_ON){
+                    setSwitchOff();
+                }else if(mPowerButtonStatus == POWER_BUTTON_STATUS_OFF){
+                    setSwitchOn();
+                }else{
+                    Log.i(LOG_TAG, "onClick()>> power button is unknown state, do nothing " );
+                }
+
+            }
+        });
           /*
          * Creates an intent filter for DownloadStateReceiver that intercepts broadcast Intents
          */
@@ -50,6 +81,34 @@ public class MainActivity extends AppCompatActivity {
 
         querySwitchStatus();
         queryTemperature();
+    }
+
+
+    private void updateResponseForSwitchStatus() {
+        Log.i(LOG_TAG, "updateResponseForSwitchStatus()>> response: " + response);
+            /* set SwitchStatusTextView*/
+        if(response.equalsIgnoreCase(SEVER_REPLY_SWITCH_ON)){
+
+            switchStatus.setText(getString(R.string.current_switch_status)
+                    + getString(R.string.power_on));
+            power_button.setText(getString(R.string.button_power_off));
+            button_status = BUTTON_STATUS_OFF;
+
+        }else if(response.equalsIgnoreCase(SEVER_REPLY_SWITCH_OFF)){
+
+            switchStatus.setText(getString(R.string.current_switch_status)
+                    + getString(R.string.power_off));
+            power_button.setText(getString(R.string.button_power_on));
+            button_status = BUTTON_STATUS_ON;
+        }else{
+            cmdStatus.setText("Error on cmd");
+            // setProgressBarVisibility(false);
+            mProgressBar.setVisibility(View.GONE);
+            switchStatus.setText(getString(R.string.unknow_state));
+            power_button.setText(getString(R.string.disable_button_state));
+            button_status = BUTTON_STATUS_UNKNOWN;
+        }
+            /* set Button status*/
     }
 
 
@@ -121,50 +180,15 @@ public class MainActivity extends AppCompatActivity {
             /*
              * Gets the status from the Intent's extended data, and chooses the appropriate action
              */
-            switch (intent.getIntExtra(Constants.EXTENDED_DATA_STATUS,
-                    Constants.STATE_ACTION_COMPLETE)) {
+            int value;
 
-                // Logs "started" state
-                case Constants.STATE_ACTION_STARTED:
-                    if (Constants.LOGD) {
+            value =  intent.getIntExtra(Constants.EXTENDED_NETWORK_ERROR, HAVE_NETWORK_ERROR);
+            if(value == HAVE_NETWORK_ERROR){
+                 mPowerButtonStatus = POWER_BUTTON_STATUS_UNKNOWN;
+            }else{
 
-                        Log.d(LOG_TAG, "State: STARTED");
-                    }
-                    break;
-                // Logs "connecting to network" state
-                case Constants.STATE_ACTION_CONNECTING:
-                    if (Constants.LOGD) {
-
-                        Log.d(LOG_TAG, "State: CONNECTING");
-                    }
-                    break;
-                // Logs "parsing the RSS feed" state
-                case Constants.STATE_ACTION_PARSING:
-                    if (Constants.LOGD) {
-
-                        Log.d(LOG_TAG, "State: PARSING");
-                    }
-                    break;
-                // Logs "Writing the parsed data to the content provider" state
-                case Constants.STATE_ACTION_WRITING:
-                    if (Constants.LOGD) {
-
-                        Log.d(LOG_TAG, "State: WRITING");
-                    }
-                    break;
-                // Starts displaying data when the RSS download is complete
-                case Constants.STATE_ACTION_COMPLETE:
-                    // Logs the status
-                    if (Constants.LOGD) {
-
-                        Log.d(LOG_TAG, "State: COMPLETE");
-                    }
-
-
-                    break;
-                default:
-                    break;
             }
+
         }
     }
 
