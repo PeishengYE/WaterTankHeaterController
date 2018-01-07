@@ -7,11 +7,14 @@ package com.radioyps.watertankheater;
 
         import android.app.Service;
         import android.content.Intent;
+        import android.net.Uri;
         import android.os.Handler;
         import android.os.IBinder;
         import android.util.Log;
 
         import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+        import static com.radioyps.watertankheater.Constants.CmdGetSwtichStatus;
+        import static com.radioyps.watertankheater.Constants.CmdGetTemperature;
 
 public abstract class MonitorService
         extends Service
@@ -52,11 +55,15 @@ public abstract class MonitorService
                 }
                 if (MonitorService.this.canContinue())
                 {
-                    Intent localIntent = new Intent(MonitorService.this.getBaseContext(), MainActivity.class);
-                    localIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-                    localIntent.putExtra("goto", true);
-                    MonitorService.this.startActivity(localIntent);
-                    MonitorService.this.cleanupAndShutdown();
+
+                    Log.i(LOG_TAG, "runnable()>> run the task: ");
+                    querySwitchStatus();
+                    queryTemperature();
+//                    Intent localIntent = new Intent(MonitorService.this.getBaseContext(), MainActivity.class);
+//                    localIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+//                    localIntent.putExtra("goto", true);
+//                    MonitorService.this.startActivity(localIntent);
+//                    MonitorService.this.cleanupAndShutdown();
                     return;
                 }
                 MonitorService.this.mHandler.postDelayed(this, 1000L);
@@ -75,6 +82,20 @@ public abstract class MonitorService
     {
         super.onStartCommand(paramIntent, paramInt1, paramInt2);
         return START_STICKY;
+    }
+
+    private void querySwitchStatus(){
+        Intent intentCmd =
+                new Intent(this, IntentWorkerService.class)
+                        .setData(Uri.parse(CmdGetSwtichStatus));
+        startService(intentCmd);
+    }
+
+    private void queryTemperature(){
+        Intent intentCmd =
+                new Intent(this, IntentWorkerService.class)
+                        .setData(Uri.parse(CmdGetTemperature));
+        startService(intentCmd);
     }
 }
 

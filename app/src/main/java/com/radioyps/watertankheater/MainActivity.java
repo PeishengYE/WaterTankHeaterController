@@ -22,6 +22,8 @@ import static com.radioyps.watertankheater.Constants.HAVE_NETWORK_ERROR;
 import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_OFF;
 import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_ON;
 import static com.radioyps.watertankheater.Constants.POWER_BUTTON_STATUS_UNKNOWN;
+import static com.radioyps.watertankheater.Constants.STATE_SWITCH_OFF;
+import static com.radioyps.watertankheater.Constants.STATE_SWITCH_ON;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private Button mPowerButton;
     private TextView mRelayTemperatureView;
     private TextView mWaterTemperatureView;
+    private TextView mSwitchStatus;
     private ProgressBar mProgressBar;
 
     private int mPowerButtonStatus = POWER_BUTTON_STATUS_UNKNOWN;
 
     public static final String LOG_TAG = "MainActivity";
-    public static final String TEST = "MainActivity_test";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mPowerButton = (Button) findViewById(R.id.power_button);
         mRelayTemperatureView = (TextView)findViewById(R.id.relay_temperature);
         mWaterTemperatureView = (TextView)findViewById(R.id.water_temperature);
-
+        mSwitchStatus = (TextView)findViewById(R.id.switch_state);
         mPowerButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View view){
 
@@ -79,45 +82,42 @@ public class MainActivity extends AppCompatActivity {
                 mStateReceiver,
                 statusIntentFilter);
 
-        mServiceIntent =
-                new Intent(this, IntentWorkerService.class)
-                           .setData(Uri.parse(TEST));
-        startService(mServiceIntent);
 
         setContentView(R.layout.activity_main);
 
         startService(new Intent(this, UsbDebuggingMonitorService.class));
-        querySwitchStatus();
-        queryTemperature();
+//        querySwitchStatus();
+//        queryTemperature();
     }
 
 
+    /*
     private void updateResponseForSwitchStatus() {
         Log.i(LOG_TAG, "updateResponseForSwitchStatus()>> response: " + response);
-            /* set SwitchStatusTextView*/
+
         if(response.equalsIgnoreCase(SEVER_REPLY_SWITCH_ON)){
 
-            switchStatus.setText(getString(R.string.current_switch_status)
+            mSwitchStatus.setText(getString(R.string.current_switch_status)
                     + getString(R.string.power_on));
-            power_button.setText(getString(R.string.button_power_off));
-            button_status = BUTTON_STATUS_OFF;
+            mPowerButton.setText(getString(R.string.button_power_off));
+            mPowerButtonStatus = BUTTON_STATUS_OFF;
 
         }else if(response.equalsIgnoreCase(SEVER_REPLY_SWITCH_OFF)){
 
-            switchStatus.setText(getString(R.string.current_switch_status)
+            mSwitchStatus.setText(getString(R.string.current_switch_status)
                     + getString(R.string.power_off));
-            power_button.setText(getString(R.string.button_power_on));
-            button_status = BUTTON_STATUS_ON;
+            mPowerButton.setText(getString(R.string.button_power_on));
+            mPowerButtonStatus = BUTTON_STATUS_ON;
         }else{
-            cmdStatus.setText("Error on cmd");
-            // setProgressBarVisibility(false);
+
             mProgressBar.setVisibility(View.GONE);
-            switchStatus.setText(getString(R.string.unknow_state));
-            power_button.setText(getString(R.string.disable_button_state));
-            button_status = BUTTON_STATUS_UNKNOWN;
+            mSwitchStatus.setText(getString(R.string.unknow_state));
+            mPowerButton.setText(getString(R.string.disable_button_state));
+            mPowerButtonStatus = BUTTON_STATUS_UNKNOWN;
         }
-            /* set Button status*/
+
     }
+    */
 
 
     public void onDestroy() {
@@ -136,28 +136,28 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void setSwitchOff(){
+    public void setSwitchOff(){
         Intent intentCmd =
                 new Intent(this, IntentWorkerService.class)
                         .setData(Uri.parse(CmdSetSwitchOFF));
         startService(intentCmd);
     }
 
-    private void setSwitchOn(){
+    public void setSwitchOn(){
         Intent intentCmd =
                 new Intent(this, IntentWorkerService.class)
                         .setData(Uri.parse(CmdSetSwitchON));
         startService(intentCmd);
     }
 
-    private void querySwitchStatus(){
+    public void querySwitchStatus(){
         Intent intentCmd =
                 new Intent(this, IntentWorkerService.class)
                         .setData(Uri.parse(CmdGetSwtichStatus));
         startService(intentCmd);
     }
 
-    private void queryTemperature(){
+    public void queryTemperature(){
         Intent intentCmd =
                 new Intent(this, IntentWorkerService.class)
                         .setData(Uri.parse(CmdGetTemperature));
@@ -189,11 +189,38 @@ public class MainActivity extends AppCompatActivity {
              * Gets the status from the Intent's extended data, and chooses the appropriate action
              */
             int value;
-
+            /* NETWORK_ERROR */
             value =  intent.getIntExtra(Constants.EXTENDED_NETWORK_ERROR, HAVE_NETWORK_ERROR);
             if(value == HAVE_NETWORK_ERROR){
                  mPowerButtonStatus = POWER_BUTTON_STATUS_UNKNOWN;
             }else{
+
+            }
+
+            /* WATER_TEMPERATURE */
+            value =  intent.getIntExtra(Constants.EXTENDED_WATER_TEMPERATURE, HAVE_NETWORK_ERROR);
+            if(value != HAVE_NETWORK_ERROR){
+                Log.i(LOG_TAG, "onReceive()>> temperatur is " + value);
+            }
+
+
+            /* SWITCH_STATUS */
+            value =  intent.getIntExtra(Constants.EXTENDED_SWITCH_STATUS, HAVE_NETWORK_ERROR);
+            if(value != HAVE_NETWORK_ERROR){
+             if(value == STATE_SWITCH_ON){
+                 Log.i(LOG_TAG, "onReceive()>> Switch is on " );
+                 mSwitchStatus.setText(getString(R.string.power_on));
+             }else if(value == STATE_SWITCH_OFF){
+                 Log.i(LOG_TAG, "onReceive()>> Switch is OFF " );
+                 mSwitchStatus.setText(getString(R.string.power_off));
+             }
+            }
+
+
+
+            /* RELAY_TEMPERATURE */
+            value =  intent.getIntExtra(Constants.EXTENDED_RELAY_TEMPERATURE, HAVE_NETWORK_ERROR);
+            if(value != HAVE_NETWORK_ERROR){
 
             }
 

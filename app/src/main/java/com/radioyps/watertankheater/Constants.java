@@ -70,15 +70,18 @@ public final class Constants {
     public static String CmdSetSwitchOFF =        "switch_off";
 
     public static String NETWORK_ERROR =        "Network Timeout";
-    /*
-     * A user-agent string that's sent to the HTTP site. It includes information about the device
-     * and the build that the device is running.
-     */
-    public static final String USER_AGENT = "Mozilla/5.0 (Linux; U; Android "
-            + android.os.Build.VERSION.RELEASE + ";"
-            + Locale.getDefault().toString() + "; " + android.os.Build.DEVICE
-            + "/" + android.os.Build.ID + ")";
 
+    public static String A13_REPLY_SWITCH_OFF = "switch is off";
+    public static String A13_REPLY_SWITCH_ON = "switch is on";
+
+
+    public static String A13_REPLY_WATER_TEMPERATURE = "Water Tank Temp:";
+//    public static String A13_REPLY_SWITCH_ON = "switch is on";
+
+
+
+    public static final int STATE_SWITCH_ON = 0x22;
+    public static final int STATE_SWITCH_OFF = 0x33;
     // Status values to broadcast to the Activity
 
     // The download is starting

@@ -14,11 +14,16 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+import static com.radioyps.watertankheater.Constants.A13_REPLY_SWITCH_OFF;
+import static com.radioyps.watertankheater.Constants.A13_REPLY_SWITCH_ON;
+import static com.radioyps.watertankheater.Constants.A13_REPLY_WATER_TEMPERATURE;
 import static com.radioyps.watertankheater.Constants.HAVE_NETWORK_ERROR;
 import static com.radioyps.watertankheater.Constants.Heater_IP_ADDRESS;
 import static com.radioyps.watertankheater.Constants.Heater_IP_PORT;
 import static com.radioyps.watertankheater.Constants.NETWORK_ERROR;
 import static com.radioyps.watertankheater.Constants.NO_NETWORK_ERROR;
+import static com.radioyps.watertankheater.Constants.STATE_SWITCH_OFF;
+import static com.radioyps.watertankheater.Constants.STATE_SWITCH_ON;
 
 /**
  * Created by yep on 18/12/17.
@@ -55,17 +60,21 @@ public class IntentWorkerService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        // Gets a URL to read from the incoming Intent's "data" value
-        String localUrlString = workIntent.getDataString();
-
-        Log.i(LOG_TAG, "IntentWorkerService()>> getting intent with:  "+ localUrlString);
-
-        Socket socket = null;
-        String cmdString = workIntent.getDataString();
-
-
 
         Log.i(LOG_TAG, "onHandleIntent()>> ");
+        // Gets a URL to read from the incoming Intent's "data" value
+        String cmd = workIntent.getDataString();
+
+        Log.i(LOG_TAG, "IntentWorkerService()>> getting intent with:  " + cmd);
+        sendCmd(cmd);
+
+    }
+
+    private void sendCmd(String  cmdString){
+
+        Socket socket = null;
+
+
         try {
 
             response = "";
@@ -97,7 +106,7 @@ public class IntentWorkerService extends IntentService {
                 Log.i(LOG_TAG, "onHandleIntent()>> read one");
                 byteArrayOutputStream.write(buffer, 0, bytesRead);
                 response += byteArrayOutputStream.toString("UTF-8");
-                Log.i(LOG_TAG, "onHandleIntent()>> read with" + response);
+                Log.i(LOG_TAG, "onHandleIntent()>> read with: << " + response +" >>");
                 isReceivedSth = true;
             }
             Log.i(LOG_TAG, "onHandleIntent ()>> after reading");
@@ -132,14 +141,28 @@ public class IntentWorkerService extends IntentService {
         }
 
         if(!response.startsWith(NETWORK_ERROR)){
+
             mBroadcaster.broadcastIntentWithError(NO_NETWORK_ERROR);
-            mBroadcaster.broadcastIntentWithWaterTemperature(30);
-            mBroadcaster.broadcastIntentWithSwitchState(1);
-            mBroadcaster.broadcastIntentWithRelayTemperature(20);
+
+            if (response.equalsIgnoreCase(A13_REPLY_SWITCH_OFF))
+                mBroadcaster.broadcastIntentWithSwitchState(STATE_SWITCH_OFF);
+
+            if (response.equalsIgnoreCase(A13_REPLY_SWITCH_ON))
+                mBroadcaster.broadcastIntentWithSwitchState(STATE_SWITCH_ON);
+
+            if (response.startsWith(A13_REPLY_WATER_TEMPERATURE)){
+                String tmp = response.substring(17, 22);
+                Log.i(LOG_TAG, "response with temperature: "+ tmp);
+                int tmperature = Integer.parseInt(tmp);
+                mBroadcaster.broadcastIntentWithWaterTemperature(tmperature);
+            }
+
         }else{
-            mBroadcaster.broadcastIntentWithError(HAVE_NETWORK_ERROR);
+
+
+
         }
 
     }
+    }
 
-}
