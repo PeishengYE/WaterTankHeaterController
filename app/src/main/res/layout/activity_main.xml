@@ -51,9 +51,9 @@
     <TextView
         android:layout_width="248dp"
         android:layout_height="232dp"
-        android:text="32"
+        android:text="-1"
         android:id="@+id/water_temperature_big"
-        android:textSize="130sp"
+        android:textSize="150sp"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
         android:textStyle="bold"

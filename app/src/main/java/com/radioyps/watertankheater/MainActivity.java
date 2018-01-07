@@ -127,6 +127,40 @@ public class MainActivity extends AppCompatActivity {
     }
     */
 
+    @Override
+    protected void onStop() {
+        // If the DownloadStateReceiver still exists, unregister it and set it to null
+        if (mStateReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mStateReceiver);
+            mStateReceiver = null;
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mStateReceiver == null){
+
+            mStateReceiver = new StateReceiver();
+            // The filter's action is BROADCAST_ACTION
+            IntentFilter statusIntentFilter = new IntentFilter(
+                    Constants.BROADCAST_ACTION);
+
+            // Sets the filter's category to DEFAULT
+            statusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+            // Registers the DownloadStateReceiver and its intent filters
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                    mStateReceiver,
+                    statusIntentFilter);
+
+        }
+
+
+
+    }
+
 
     public void onDestroy() {
 

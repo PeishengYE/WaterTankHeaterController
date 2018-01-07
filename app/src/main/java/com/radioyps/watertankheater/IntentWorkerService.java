@@ -40,7 +40,7 @@ public class IntentWorkerService extends IntentService {
     private BroadcastNotifier mBroadcaster = new BroadcastNotifier(this);
     private String response;
     private final static int SOCKET_TIMEOUT= 10*000; /*10 seconds */
-    private boolean isReceivedSth = false;
+
 
 
     /**
@@ -111,7 +111,7 @@ public class IntentWorkerService extends IntentService {
                 byteArrayOutputStream.write(buffer, 0, bytesRead);
                 response += byteArrayOutputStream.toString("UTF-8");
                 Log.i(LOG_TAG, "onHandleIntent()>> read with: << " + response +" >>");
-                isReceivedSth = true;
+
             }
             Log.i(LOG_TAG, "onHandleIntent ()>> after reading");
             outputStream.close();

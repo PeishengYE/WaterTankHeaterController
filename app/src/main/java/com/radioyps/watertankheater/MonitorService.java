@@ -25,7 +25,8 @@ public abstract class MonitorService
     private static final String LOG_TAG = "MonitorService";
     private BroadcastNotifier mBroadcaster = new BroadcastNotifier(this);
     private static boolean isProgressBarEnabled = false;
-    private void cleanupAndShutdown()
+
+    public void cleanupAndShutdown()
     {
         Handler localHandler = this.mHandler;
         if (localHandler != null)
