@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mWaterTemperatureViewBig;
     private TextView mWaterTemperatureViewSmall;
     private TextView mSwitchStatus;
+    private int mCount = 0;
     private ProgressBar mProgressBar;
 
     private int mPowerButtonStatus = POWER_BUTTON_STATUS_UNKNOWN;
@@ -60,13 +61,13 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
         mPowerButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View view){
-
+                mCount ++;
                 if(mPowerButtonStatus == POWER_BUTTON_STATUS_ON){
                     setSwitchOff();
                 }else if(mPowerButtonStatus == POWER_BUTTON_STATUS_OFF){
                     setSwitchOn();
                 }else{
-                    Log.i(LOG_TAG, "onClick()>> power button is unknown state, do nothing " );
+                    Log.i(LOG_TAG, "onClick()>> power button is unknown state, do nothing " + "ZIHAN =" + mCount);
                 }
 
             }
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this, UsbDebuggingMonitorService.class));
 //        querySwitchStatus();
 //        queryTemperature();
+        Main.dimDisplay(true);
     }
 
 
