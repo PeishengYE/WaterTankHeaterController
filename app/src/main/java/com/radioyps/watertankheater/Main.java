@@ -60,7 +60,7 @@ public class Main {
 
         FileOutputStream out = null;
         try {
-            File file = new File(getPicStorageDir("TEST"), "screenshot.png");
+            File file = new File(getPicStorageDir(null), "screenshot.png");
 
             out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
@@ -84,7 +84,7 @@ public class Main {
         try {
             Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl");
             Method mGetScreenshot = surfaceControlClass.getDeclaredMethod("screenshot", new Class[] { Integer.TYPE, Integer.TYPE });
-            Bitmap bmp = (Bitmap)mGetScreenshot.invoke(null, new Object[] { Integer.valueOf(1024), Integer.valueOf(600) });
+            Bitmap bmp = (Bitmap)mGetScreenshot.invoke(null, new Object[] { Integer.valueOf(480), Integer.valueOf(800) });
             saveBitmap(bmp);
             Log.d(LOG_TAG, "Main.makeScreenShot()<<");
         }catch (Exception e){
