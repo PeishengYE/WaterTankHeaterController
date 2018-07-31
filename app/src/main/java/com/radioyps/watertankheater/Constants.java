@@ -71,7 +71,7 @@ public final class Constants {
 
     // Defines the key for storing fullscreen state
     public static final String Heater_IP_ADDRESS =
-            "192.168.12.202";
+            "192.168.106.202";
 
     public static final int Heater_IP_PORT =
             5018;
